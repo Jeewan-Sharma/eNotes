@@ -1,0 +1,98 @@
+<!-- search -->
+<div class="flex justify-content-center">
+  <p-inputGroup class="w-9">
+    <input type="text" pInputText placeholder="Search" />
+    <button type="button" pButton icon="pi pi-search" styleClass="p-button-warn"></button>
+  </p-inputGroup>
+</div>
+<!-- notes -->
+<div class="grid m-0 mt-4">
+  <div *ngFor="let note of notes" class="col-12 md:col-6 lg:col-4">
+    <div (click)="openDetails(note)" class="p-4 surface-0 cursor-pointer box-shadow border">
+      <p class="text-center font-semibold text-xl text-700 white-space-nowrap overflow-hidden text-overflow-ellipsis">
+        {{note.title}}</p>
+      <div class="h-10rem overflow-y-auto">
+        <p-editor [readonly]="true" class="readonly-editor" [(ngModel)]="note.description"
+          styleClass="h-full"></p-editor>
+      </div>
+      <p-divider />
+      <div class="flex align-items-center justify-content-between mt-2">
+        <p class="text-gray-500">Updated:{{note.modifiedDate}}</p>
+        <div class="flex gap-2">
+          <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" size="small"></p-button>
+          <p-button icon="pi pi-pencil" [rounded]="true" size="small"></p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add button -->
+<button (click)="openAddDialog()" class="add-button border-circle"><i class="pi pi-plus text-4xl text-0"></i></button>
+
+
+<!-- details -->
+<p-dialog *ngIf="detailsDialogVisibility && ((screenSize$ | async) === 'lg' || (screenSize$ | async) ==='xl')"
+  [modal]='true' [(visible)]="detailsDialogVisibility" [style]="{width: '80vw'}">
+
+  <form [formGroup]="form">
+    <p class="text-800 font-semibold text-lg">Title</p>
+    <input formControlName="title" pInputText placeholder="Title for the Note" class="w-full text-lg text-700 mt-2" />
+    <p class="text-800 font-semibold text-lg mt-4">Notes Description</p>
+    <div class="h-22rem mt-2">
+      <p-editor formControlName="description" styleClass="h-20rem"></p-editor>
+    </div>
+    <p class="text-800 font-semibold text-lg mt-4">Tags</p>
+    <div class="flex flex-wrap align-items-center gap-3 mt-2" formArrayName="tagsForm">
+      <div *ngFor="let tagControl of tagsForm.controls; let i = index">
+        <p-inputGroup>
+          <input type="text" pInputText placeholder="Tag" [formControl]="$any(tagControl)" />
+          <button (click)="removeTag(i)" type="button" pButton icon="pi pi-minus" outlined="true"></button>
+        </p-inputGroup>
+      </div>
+      <p-button (click)="addTag()" icon="pi pi-plus"></p-button>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button (click)="closeDetailsDialog()" label="Cancel" outlined="true"></p-button>
+    <p-button (click)="saveDetailsNote()" label="Save"></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-sidebar *ngIf="(screenSize$ | async) ==='sm' || (screenSize$ | async) === 'md'" [(visible)]="detailsDialogVisibility"
+  position="bottom" [style]="{height:'80vh'}" styleClass="border-round-top">
+
+</p-sidebar>
+
+<!-- new -->
+<p-dialog *ngIf="addDialogVisibility && ((screenSize$ | async) === 'lg' || (screenSize$ | async) ==='xl')"
+  [modal]='true' [(visible)]="addDialogVisibility" [style]="{width: '80vw'}">
+
+  <form [formGroup]="form">
+    <p class="text-800 font-semibold text-lg">Title</p>
+    <input formControlName="title" pInputText placeholder="Title for the Note" class="w-full text-lg text-700 mt-2" />
+    <p class="text-800 font-semibold text-lg mt-4">Notes Description</p>
+    <div class="h-22rem mt-2">
+      <p-editor formControlName="description" styleClass="h-20rem"></p-editor>
+    </div>
+    <p class="text-800 font-semibold text-lg mt-4">Tags</p>
+    <div class="flex flex-wrap align-items-center gap-3 mt-2" formArrayName="tagsForm">
+      <div *ngFor="let tagControl of tagsForm.controls; let i = index">
+        <p-inputGroup>
+          <input type="text" pInputText placeholder="Tag" [formControl]="$any(tagControl)" />
+          <button (click)="removeTag(i)" type="button" pButton icon="pi pi-minus" outlined="true"></button>
+        </p-inputGroup>
+      </div>
+      <p-button (click)="addTag()" icon="pi pi-plus"></p-button>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button (click)="closeAddDialog()" label="Cancel" outlined="true"></p-button>
+    <p-button (click)="addNewNote()" label="Save"></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-sidebar *ngIf="(screenSize$ | async) ==='sm' || (screenSize$ | async) === 'md'" [(visible)]="addDialogVisibility"
+  position="bottom" [style]="{height:'80vh'}" styleClass="border-round-top">
+
+</p-sidebar>

@@ -2,6 +2,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -19,10 +20,22 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
+    "lib": ["ES2022", "dom"],
+    "paths": {
+      // Core
+      "@core/consts": ["src/app/core/consts/index"],
+      "@core/enums": ["src/app/core/enums/index"],
+      "@core/guards": ["src/app/core/guards/index"],
+      "@core/interceptors": ["src/app/core/interceptors/index"],
+      "@core/models": ["src/app/core/models/index"],
+      "@core/services": ["src/app/core/services/index"],
+      "@core/utils": ["src/app/core/utils/index"],
+      // Shared
+      "@shared/components": ["src/app/shared/components/index"],
+      "@shared/directives": ["src/app/shared/directives/index"],
+      "@shared/modules": ["src/app/shared/modules/index"],
+      "@shared/pipes": ["src/app/shared/pipes/index"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
