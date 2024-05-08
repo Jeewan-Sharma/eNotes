@@ -1,0 +1,22 @@
+<div class="p-3 surface-0 box-shadow border-round-3xl border-1 border-gray-200">
+  <div class="p-3 flex gap-2 cursor-pointer align-items-center hover:surface-200">
+    <i class="pi pi-book text-2xl text-600"></i>
+    <p class="text-600">All notes</p>
+    <p-badge [value]="2"></p-badge>
+  </div>
+  <div class="p-3 flex gap-2 cursor-pointer align-items-center hover:surface-200">
+    <i class="pi pi-star-fill text-2xl text-600"></i>
+    <p class="text-600">Important notes</p>
+  </div>
+  <!-- tags -->
+  <div class="p-3">
+    <p class="font-bold">Tags</p>
+  </div>
+  <div *ngFor="let tag of tags" class="p-3 flex gap-2 cursor-pointer align-items-center hover:surface-200">
+    <i class="pi pi-hashtag text-600"></i>
+    <p class="text-600">{{tag}}</p>
+  </div>
+  <div *ngIf="tags.length === 0" class="p-3">
+    <p class="text-500">Add Notes with tags</p>
+  </div>
+</div>
