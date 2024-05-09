@@ -19,13 +19,20 @@
 
 .add-button {
   position: fixed;
-  bottom: 5rem;
+  bottom: 3rem;
   right: 5rem;
   padding: 1rem;
-  background-color: var(--primary-400);
+  background-color: #3d4260;
   border: none;
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+@media screen and (max-width: 750px) {
+  .add-button {
+    bottom: 3rem;
+    right: 3rem;
+  }
 }

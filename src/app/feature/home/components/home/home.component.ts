@@ -10,6 +10,8 @@ import { DeviceWidthService } from '@core/services';
 })
 export class HomeComponent implements OnInit {
 
+  text = '<p>jgfdjhgfkhg</p>'
+
   notes!: INote[];
   detailsDialogVisibility: boolean = false;
   addDialogVisibility: boolean = false;
@@ -95,6 +97,7 @@ export class HomeComponent implements OnInit {
 
   saveDetailsNote() {
     console.log(this.form.value)
+    console.log(this.text)
   }
 
   openDetails(selectedNote: INote) {
@@ -123,7 +126,7 @@ export class HomeComponent implements OnInit {
 
   addNewNote() {
     if (this.form.invalid) {
-      this.form.markAsTouched();
+      this.form.markAllAsTouched()
       console.log('invalid Form')
       return
     }
