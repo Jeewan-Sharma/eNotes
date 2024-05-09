@@ -11,9 +11,9 @@
     <div (click)="openDetails(note)" class="p-4 surface-0 cursor-pointer box-shadow border">
       <p class="text-center font-semibold text-xl text-700 white-space-nowrap overflow-hidden text-overflow-ellipsis">
         {{note.title}}</p>
-      <div class="h-10rem overflow-y-auto">
-        <p-editor [readonly]="true" class="readonly-editor" [(ngModel)]="note.description"
-          styleClass="h-full"></p-editor>
+      <div class="h-10rem">
+        <p-editor [readonly]="true" class="readonly-editor" [readonly]="true" [(ngModel)]="note.description"
+          styleClass="h-full overflow-hidden"></p-editor>
       </div>
       <p-divider />
       <div class="flex align-items-center justify-content-between mt-2">
@@ -59,21 +59,47 @@
   </ng-template>
 </p-dialog>
 
-<p-sidebar *ngIf="(screenSize$ | async) ==='sm' || (screenSize$ | async) === 'md'" [(visible)]="detailsDialogVisibility"
-  position="bottom" [style]="{height:'80vh'}" styleClass="border-round-top">
-
-</p-sidebar>
-
-<!-- new -->
-<p-dialog *ngIf="addDialogVisibility && ((screenSize$ | async) === 'lg' || (screenSize$ | async) ==='xl')"
-  [modal]='true' [(visible)]="addDialogVisibility" [style]="{width: '80vw'}">
-
+<p-sidebar *ngIf="detailsDialogVisibility && ((screenSize$ | async) ==='sm' || (screenSize$ | async) === 'md')"
+  [(visible)]="detailsDialogVisibility" position="bottom" [style]="{height:'80vh'}" styleClass="border-round-top">
   <form [formGroup]="form">
     <p class="text-800 font-semibold text-lg">Title</p>
     <input formControlName="title" pInputText placeholder="Title for the Note" class="w-full text-lg text-700 mt-2" />
     <p class="text-800 font-semibold text-lg mt-4">Notes Description</p>
     <div class="h-22rem mt-2">
       <p-editor formControlName="description" styleClass="h-20rem"></p-editor>
+    </div>
+    <p class="text-800 font-semibold text-lg mt-4">Tags</p>
+    <div class="flex flex-wrap align-items-center gap-3 mt-5" formArrayName="tagsForm">
+      <div *ngFor="let tagControl of tagsForm.controls; let i = index">
+        <p-inputGroup>
+          <input type="text" pInputText placeholder="Tag" [formControl]="$any(tagControl)" />
+          <button (click)="removeTag(i)" type="button" pButton icon="pi pi-minus" outlined="true"></button>
+        </p-inputGroup>
+      </div>
+      <p-button (click)="addTag()" icon="pi pi-plus"></p-button>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button (click)="closeDetailsDialog()" label="Cancel" outlined="true"></p-button>
+    <p-button (click)="saveDetailsNote()" label="Save"></p-button>
+  </ng-template>
+</p-sidebar>
+
+<!-- new -->
+<p-dialog *ngIf="addDialogVisibility && ((screenSize$ | async) === 'lg' || (screenSize$ | async) ==='xl')"
+  [modal]='true' [(visible)]="addDialogVisibility" [style]="{width: '80vw'}">
+  <form [formGroup]="form">
+    <p class="text-800 font-semibold text-lg">Title</p>
+    <input formControlName="title" pInputText placeholder="Title for the Note" class="w-full text-lg text-700 mt-2" />
+    <div class="mt-1" *ngIf="form.get('title')?.invalid && form.get('title')?.touched">
+      <p class="text-red-500 text-xs">*Title is required.</p>
+    </div>
+    <p class="text-800 font-semibold text-lg mt-4">Notes Description</p>
+    <div class="h-22rem mt-2">
+      <p-editor formControlName="description" styleClass="h-20rem"></p-editor>
+    </div>
+    <div class="mt-4" *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+      <p class="text-red-500 text-xs">*Description is required.</p>
     </div>
     <p class="text-800 font-semibold text-lg mt-4">Tags</p>
     <div class="flex flex-wrap align-items-center gap-3 mt-2" formArrayName="tagsForm">
@@ -92,7 +118,28 @@
   </ng-template>
 </p-dialog>
 
-<p-sidebar *ngIf="(screenSize$ | async) ==='sm' || (screenSize$ | async) === 'md'" [(visible)]="addDialogVisibility"
-  position="bottom" [style]="{height:'80vh'}" styleClass="border-round-top">
-
+<p-sidebar *ngIf="addDialogVisibility && ((screenSize$ | async) ==='sm' || (screenSize$ | async) === 'md')"
+  [(visible)]="addDialogVisibility" position="bottom" [style]="{height:'80vh'}" styleClass="border-round-top">
+  <form [formGroup]="form">
+    <p class="text-800 font-semibold text-lg">Title</p>
+    <input formControlName="title" pInputText placeholder="Title for the Note" class="w-full text-lg text-700 mt-2" />
+    <p class="text-800 font-semibold text-lg mt-4">Notes Description</p>
+    <div class="h-22rem mt-2">
+      <p-editor formControlName="description" styleClass="h-20rem"></p-editor>
+    </div>
+    <p class="text-800 font-semibold text-lg mt-4">Tags</p>
+    <div class="flex flex-wrap align-items-center gap-3 mt-5" formArrayName="tagsForm">
+      <div *ngFor="let tagControl of tagsForm.controls; let i = index">
+        <p-inputGroup>
+          <input type="text" pInputText placeholder="Tag" [formControl]="$any(tagControl)" />
+          <button (click)="removeTag(i)" type="button" pButton icon="pi pi-minus" outlined="true"></button>
+        </p-inputGroup>
+      </div>
+      <p-button (click)="addTag()" icon="pi pi-plus"></p-button>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button (click)="closeDetailsDialog()" label="Cancel" outlined="true"></p-button>
+    <p-button (click)="saveDetailsNote()" label="Save"></p-button>
+  </ng-template>
 </p-sidebar>
