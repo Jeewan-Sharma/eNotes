@@ -1,0 +1,126 @@
+<div class="flex justify-content-center align-items-center min-h-screen py-6">
+  <div class="grid w-11 lg:w-9 border-round-lg box-shadow">
+    <div
+      class="col-12 md:col-5 flex flex-column justify-content-center align-items-center bg-orange-100 lg:border-round-left-lg">
+      <a routerLink="/">
+        <img [src]="ASSETS.IMAGES.LOGO" alt="DOKAN" width="100rem">
+      </a>
+      <p class="text-primary-600 font-bold font-italic text-center mt-2">"Note your precious IDEAS"</p>
+    </div>
+    <div class="col-12 md:col-7 bg-white p-6 lg:border-round-right-lg">
+      <div class="mb-3">
+        <p class="font-bold text-3xl mb-1 ">Sign Up</p>
+        <p class="text-600">Welcome to easy Notes</p>
+      </div>
+      <form [formGroup]="registerForm">
+        <div class="grid">
+          <div class="mb-2 col-12 md:col-6">
+            <p class="text-700 text-lg mb-1">First Name</p>
+            <input formControlName="firstName" pInputText placeholder="Enter your first Name" class="w-full " />
+            <div class="mt-1" *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
+              <p class="text-red-500">First Name is required.</p>
+            </div>
+          </div>
+          <div class="mb-2 col-12 md:col-6">
+            <p class="text-700 text-lg mb-1">Last Name</p>
+            <input formControlName="lastName" pInputText placeholder="Enter your Last Name" class="w-full" />
+            <div class="mt-1" *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
+              <p class="text-red-500">Last Name is required.</p>
+            </div>
+          </div>
+          <div class="mb-2 col-12 md:col-6">
+            <p class="text-700 text-lg mb-1">Email</p>
+            <input formControlName="email" pInputText placeholder="Enter your Email" class="w-full" />
+            <div class="mt-1" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+              <p class="text-red-500">Email is required and should be a valid email address.</p>
+            </div>
+          </div>
+          <div class="mb-2 col-12 md:col-6">
+            <p class="text-700 text-lg mb-1">Phone</p>
+            <p-inputMask mask="(999) 999-9999" formControlName="phone" placeholder="(999) 999-9999"
+              styleClass="w-full"></p-inputMask>
+            <div class="mt-1" *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
+              <p class="text-red-500">Phone Number is required.</p>
+            </div>
+          </div>
+          <div class="mb-2 col-12 md:col-6">
+            <p class="text-700 text-lg mb-1">Password</p>
+            <div class="p-inputgroup">
+              <input type="text" pInputText placeholder="Enter your Password" formControlName="password"
+                [type]="isPasswordVisible ? 'text' : 'password'" />
+              <span class="p-inputgroup-addon cursor-pointer" (click)="isPasswordVisible = !isPasswordVisible">
+                <i *ngIf="!isPasswordVisible" class="pi pi-eye"></i>
+                <i *ngIf="isPasswordVisible" class="pi pi-eye-slash"></i>
+              </span>
+            </div>
+            <div class="mt-1" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+              <p class="text-red-500">{{getErrorMessage('password')}}</p>
+            </div>
+          </div>
+          <div class="mb-3 col-12 md:col-6">
+            <p class="text-700 text-lg mb-1">Confirm Password</p>
+            <div class="p-inputgroup">
+              <input type="text" pInputText placeholder="Enter your Password" formControlName="confirmPassword"
+                [type]="isConfirmPasswordVisible ? 'text' : 'password'" />
+              <span class="p-inputgroup-addon cursor-pointer"
+                (click)="isConfirmPasswordVisible = !isConfirmPasswordVisible">
+                <i *ngIf="!isConfirmPasswordVisible" class="pi pi-eye"></i>
+                <i *ngIf="isConfirmPasswordVisible" class="pi pi-eye-slash"></i>
+              </span>
+            </div>
+            <div class="mt-1"
+              *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+              <p class="text-red-500">{{getErrorMessage('confirmPassword')}}</p>
+            </div>
+          </div>
+          <button (click)="submit()" type="submit" pButton pRipple label="Sign Up" class="w-full mb-2"></button>
+        </div>
+      </form>
+      <p class="text-700 text-center">Already have an account? <a (click)="routeToLogin()"
+          class="font-bold text-gray-800 cursor-pointer">Login
+          Here</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- response dialog -->
+<p-dialog *ngIf="(screenSize$ | async) ==='lg' || (screenSize$ | async) === 'xl'" class="registerResponse"
+  [(visible)]="showResponse" [modal]="true" [style]="{width: '30vw'}" [draggable]="false"
+  [breakpoints]="{'767px': '100vw'}">
+  <div *ngIf="message" class="text-center">
+    <img [src]="message.image" alt="Failed" class="w-2 h-2">
+    <p class="font-bold text-4xl">{{message.title}}</p>
+    <p class="text-xl text-700 mt-1">{{message.description}}</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div *ngIf="isRegistrationSuccess" class="flex justify-content-center p-2">
+      <button pButton type="button" styleClass="p-button-sm" class="w-full" label="Proceed to login"
+        (click)="routeToLogin()"></button>
+    </div>
+    <div *ngIf="!isRegistrationSuccess" class="flex justify-content-center p-2">
+      <button pButton type="button" styleClass="p-button-sm" label="Okay" class="w-full"
+        (click)="closeDialog()"></button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-sidebar *ngIf="(screenSize$ | async) ==='sm' || (screenSize$ | async) === 'md'" [(visible)]="showResponse"
+  position="bottom" [style]="{height:'35vh'}" (onHide)="closeDialog()" styleClass="border-round-top">
+  <div *ngIf="message" class="text-center">
+    <img [src]="message.image" alt="Failed" class="w-2 h-2">
+    <p class="font-bold text-4xl">{{message.title}}</p>
+    <p class="text-xl text-700 mt-1">{{message.description}}</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <div *ngIf="isRegistrationSuccess" class="flex justify-content-center p-2">
+      <button pButton type="button" styleClass="p-button-sm" class="w-full" label="Proceed to login"
+        (click)="routeToLogin()"></button>
+    </div>
+    <div *ngIf="!isRegistrationSuccess" class="flex justify-content-center p-2">
+      <button pButton type="button" styleClass="p-button-sm" label="Okay" class="w-full"
+        (click)="closeDialog()"></button>
+    </div>
+  </ng-template>
+</p-sidebar>

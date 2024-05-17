@@ -14,9 +14,13 @@
   </div>
   <!-- Night Mode Toggle -->
   <div class="flex align-items-center gap-3">
-    <i class="pi pi-sun text-3xl text-600"></i>
-    <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
-    <i class="pi pi-moon text-3xl text-600"></i>
+    <div class="flex align-items-center gap-2">
+      <i class="pi pi-sun text-2xl text-600"></i>
+      <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
+      <i class="pi pi-moon text-2xl text-600"></i>
+    </div>
+    <i (click)="op.toggle($event)"
+      class="pi pi-user text-lg font-bold text-600 border-2 border-text-600 border-circle p-1 cursor-pointer hover-color hover:border-primary-500"></i>
   </div>
 </div>
 
@@ -43,3 +47,33 @@
     </div>
   </ng-template>
 </p-sidebar>
+
+<p-overlayPanel #op>
+  <ng-template pTemplate="content">
+    <div *ngIf="loginCredential.loginStatus">
+      <div class="flex align-items-center gap-2 p-2 bg-gray-200 border-round">
+        <p class="py-1 px-2 text-white border-circle font-bold bg-primary-600 text-3xl">
+          {{loginCredential.firstName.charAt(0)}}{{loginCredential.lastName.charAt(0)}}</p>
+        <div>
+          <p class="text-xl font-bold text-700">{{loginCredential.firstName}} {{loginCredential.lastName}}</p>
+          <p class="text-sm text-700">{{loginCredential.email}}</p>
+        </div>
+      </div>
+      <div class="py-2 px-4 mt-1 flex gap-3 align-items-center cursor-pointer border-round hover-effect">
+        <i class="text-xl pi pi-user"></i>
+        <p class="text-lg">Profile</p>
+      </div>
+      <div class="py-2 px-4 mt-1 flex gap-3 align-items-center cursor-pointer border-round hover-effect">
+        <i class="text-xl pi pi-cog"></i>
+        <p class="text-lg">Settings and Privacy</p>
+      </div>
+      <div (click)="logout()" class="py-2 px-4 flex gap-3 align-items-center cursor-pointer border-round hover-effect">
+        <i class="text-xl pi pi-sign-out"></i>
+        <p class="text-lg">Logout</p>
+      </div>
+    </div>
+    <div *ngIf="!loginCredential.loginStatus">
+      <p-button (click)="routeToLogin()" styleClass="w-full" label="Login or Register"></p-button>
+    </div>
+  </ng-template>
+</p-overlayPanel>
