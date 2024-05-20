@@ -14,33 +14,18 @@
       </div>
       <form [formGroup]="registerForm">
         <div class="grid">
-          <div class="mb-2 col-12 md:col-6">
-            <p class="text-700 text-lg mb-1">First Name</p>
-            <input formControlName="firstName" pInputText placeholder="Enter your first Name" class="w-full " />
-            <div class="mt-1" *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
-              <p class="text-red-500">First Name is required.</p>
-            </div>
-          </div>
-          <div class="mb-2 col-12 md:col-6">
-            <p class="text-700 text-lg mb-1">Last Name</p>
-            <input formControlName="lastName" pInputText placeholder="Enter your Last Name" class="w-full" />
-            <div class="mt-1" *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
-              <p class="text-red-500">Last Name is required.</p>
-            </div>
-          </div>
-          <div class="mb-2 col-12 md:col-6">
+          <div class="mb-2 col-12">
             <p class="text-700 text-lg mb-1">Email</p>
             <input formControlName="email" pInputText placeholder="Enter your Email" class="w-full" />
             <div class="mt-1" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
               <p class="text-red-500">Email is required and should be a valid email address.</p>
             </div>
           </div>
-          <div class="mb-2 col-12 md:col-6">
-            <p class="text-700 text-lg mb-1">Phone</p>
-            <p-inputMask mask="(999) 999-9999" formControlName="phone" placeholder="(999) 999-9999"
-              styleClass="w-full"></p-inputMask>
-            <div class="mt-1" *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
-              <p class="text-red-500">Phone Number is required.</p>
+          <div class="mb-2 col-12">
+            <p class="text-700 text-lg mb-1">User Name</p>
+            <input formControlName="userName" pInputText placeholder="Enter your User Name" class="w-full " />
+            <div class="mt-1" *ngIf="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched">
+              <p class="text-red-500">User Name is required.</p>
             </div>
           </div>
           <div class="mb-2 col-12 md:col-6">
@@ -54,7 +39,7 @@
               </span>
             </div>
             <div class="mt-1" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-              <p class="text-red-500">{{getErrorMessage('password')}}</p>
+              <p class="text-red-500">Password is required and should contain 6 to 20 letters.</p>
             </div>
           </div>
           <div class="mb-3 col-12 md:col-6">
@@ -70,7 +55,7 @@
             </div>
             <div class="mt-1"
               *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
-              <p class="text-red-500">{{getErrorMessage('confirmPassword')}}</p>
+              <p class="text-red-500">Confirmation Password should match the Password</p>
             </div>
           </div>
           <button (click)="submit()" type="submit" pButton pRipple label="Sign Up" class="w-full mb-2"></button>
@@ -86,9 +71,8 @@
 
 
 <!-- response dialog -->
-<p-dialog *ngIf="(screenSize$ | async) ==='lg' || (screenSize$ | async) === 'xl'" class="registerResponse"
-  [(visible)]="showResponse" [modal]="true" [style]="{width: '30vw'}" [draggable]="false"
-  [breakpoints]="{'767px': '100vw'}">
+<p-dialog *ngIf="(screenSize$ | async) ==='lg' || (screenSize$ | async) === 'xl'" [(visible)]="showResponse"
+  [modal]="true" [style]="{width: '30vw'}" [breakpoints]="{'767px': '100vw'}">
   <div *ngIf="message" class="text-center">
     <img [src]="message.image" alt="Failed" class="w-2 h-2">
     <p class="font-bold text-4xl">{{message.title}}</p>
@@ -107,7 +91,7 @@
 </p-dialog>
 
 <p-sidebar *ngIf="(screenSize$ | async) ==='sm' || (screenSize$ | async) === 'md'" [(visible)]="showResponse"
-  position="bottom" [style]="{height:'35vh'}" (onHide)="closeDialog()" styleClass="border-round-top">
+  position="bottom" [style]="{height:'35vh'}" styleClass="border-round-top">
   <div *ngIf="message" class="text-center">
     <img [src]="message.image" alt="Failed" class="w-2 h-2">
     <p class="font-bold text-4xl">{{message.title}}</p>

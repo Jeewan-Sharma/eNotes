@@ -36,7 +36,10 @@
           <p-checkbox formControlName="rememberMe" [binary]="true" inputId="ny"></p-checkbox>
           <label for="ny">Remember Me</label>
         </div>
-        <button type="submit" pButton pRipple label="Login" (click)="submit()" class="w-full mb-2"></button>
+        <button *ngIf="!isLoading" type="submit" pButton pRipple label="Login" (click)="submit()"
+          class="w-full mb-2"></button>
+        <button *ngIf="isLoading" icon="pi pi-spin pi-spinner" type="submit" pButton pRipple label="Login"
+          class="w-full mb-2"></button>
         <div *ngIf="isCredentialFalse">
           <p class="text-red-500 text-center">Invalid login credential.</p>
         </div>
@@ -49,9 +52,8 @@
 </div>
 
 <!-- response dialog -->
-<p-dialog *ngIf="(screenSize$ | async) ==='lg' || (screenSize$ | async) === 'xl'" class="loginResponse"
-  [(visible)]="showErrorResponse" [modal]="true" [style]="{width: '30vw'}" [draggable]="false"
-  [breakpoints]="{'767px': '100vw'}">
+<p-dialog *ngIf="(screenSize$ | async) ==='lg' || (screenSize$ | async) === 'xl'" [(visible)]="showErrorResponse"
+  [modal]="true" [style]="{width: '30vw'}" [breakpoints]="{'767px': '100vw'}">
   <div *ngIf="message" class="text-center">
     <img [src]="message.image" alt="Failed" class="w-2 h-2">
     <p class="font-bold text-4xl">{{message.title}}</p>
@@ -66,7 +68,7 @@
 </p-dialog>
 
 <p-sidebar *ngIf="(screenSize$ | async) ==='sm' || (screenSize$ | async) === 'md'" [(visible)]="showErrorResponse"
-  position="bottom" [style]="{height:'35vh'}" (onHide)="closeDialog()" styleClass="border-round-top">
+  position="bottom" [style]="{height:'35vh'}" styleClass="border-round-top">
   <div *ngIf="message" class="text-center">
     <img [src]="message.image" alt="Failed" class="w-2 h-2">
     <p class="font-bold text-4xl">{{message.title}}</p>

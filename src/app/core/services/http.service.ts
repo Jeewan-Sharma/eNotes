@@ -33,6 +33,7 @@ export class HttpService {
     const options: IRequestModel = {
       body: body,
       headers: headers,
+      observe: 'response',
       params: params,
     };
     return this.http.request(method, url, options).pipe(

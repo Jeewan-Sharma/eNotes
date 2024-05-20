@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ASSETS } from '@core/consts';
 import { ILoginCredentials, IMessage } from '@core/models';
 import { AuthService, DeviceWidthService, LoaderService } from '@core/services';
@@ -13,6 +13,7 @@ import { AuthService, DeviceWidthService, LoaderService } from '@core/services';
 export class LoginComponent implements OnInit {
   readonly ASSETS = ASSETS;
   loginForm!: FormGroup;
+  isLoading: boolean = false;
   isPasswordVisible: boolean = false;
   isCredentialFalse: boolean = false;
   showErrorResponse: boolean = false;
@@ -32,9 +33,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private _deviceWidthService: DeviceWidthService,
-    private _loaderService: LoaderService,
+    protected _loaderService: LoaderService,
     private _router: Router,
-    private _activatedRoute: ActivatedRoute,
     private _authService: AuthService
   ) { }
 
@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
     return this._deviceWidthService.screenSize$;
   }
 
-  submit() {
+  async submit() {
     try {
       if (this.loginForm.invalid) {
         this.loginForm.markAllAsTouched();
@@ -67,31 +67,29 @@ export class LoginComponent implements OnInit {
         return;
       }
 
-      this._loaderService.showLoader()
+      this.isLoading = true;
       const loginCredentialState: ILoginCredentials = {
         email: this.loginForm.controls['email'].value,
         password: this.loginForm.controls['password'].value,
       };
 
-      const rememberMe = this.loginForm.controls['rememberMe'].value;
-      const res = this._authService.login(loginCredentialState)
-      console.log(res)
-      // const res: IRegisterCredentials = await this._authService.login(credentialState)
-      // if (res) {
-      // if (rememberMe) {
-      //   this._localHostDataService.setLoginStatusAndCredentials(rememberMe, res.firstName, res.lastName, credentialState.email, res.phone, credentialState.password, true)
-      // } else {
-      //   this._localHostDataService.setLoginStatusAndCredentials(rememberMe, null, null, null, null, null, true)
-      // }
-      //
-      //   const returnUrl = this._activatedRoute.snapshot.queryParams['returnUrl'] || '/';
-      //   this._router.navigate([returnUrl])
-      // }
+      const res = await this._authService.login(loginCredentialState)
+      if (res) {
+        // !todo: remember me setting
+        // const rememberMe = this.loginForm.controls['rememberMe'].value;
+        // if (rememberMe) {
+        //   this._localHostDataService.setLoginStatusAndCredentials(rememberMe, res.firstName, res.lastName, credentialState.email, res.phone, credentialState.password, true)
+        // } else {
+        //   this._localHostDataService.setLoginStatusAndCredentials(rememberMe, null, null, null, null, null, true)
+        // }
+        //
+        this._router.navigate(['/'])
+      }
     } catch (e) {
-      this.message = this.loginFailedMessage
-      this.openDialog()
+      this.message = this.loginFailedMessage;
+      this.openDialog();
     } finally {
-      this._loaderService.hideLoader()
+      this.isLoading = false;
     }
 
   }
