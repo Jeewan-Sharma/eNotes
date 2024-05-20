@@ -35,6 +35,7 @@ export class HttpService {
       headers: headers,
       observe: 'response',
       params: params,
+      withCredentials: true,
     };
     return this.http.request(method, url, options).pipe(
       catchError(this.handleError),
