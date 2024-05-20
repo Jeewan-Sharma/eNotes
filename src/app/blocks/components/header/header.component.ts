@@ -14,6 +14,13 @@ export class HeaderComponent {
 
   menuVisibility: boolean = false;
 
+  loginCredential = {
+    loginStatus: false,
+    firstName: "Jeewan",
+    lastName: "Sharma",
+    email: "sjeewan53@gmail.com"
+  }
+
   constructor(protected _deviceWidthService: DeviceWidthService) { }
 
   openSideBar() {
@@ -22,5 +29,11 @@ export class HeaderComponent {
 
   closeSideBar() {
     this.menuVisibility = false;
+  }
+
+  routeToLogin() { }
+
+  logout() {
+
   }
 }
