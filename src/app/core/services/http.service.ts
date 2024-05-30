@@ -65,7 +65,7 @@ export class HttpService {
     header?: HttpHeaders,
     params?: HttpParams | { [param: string]: string | string[] }
   ): Observable<any> {
-    return this.request('GET', url, null, params, header);
+    return this.request('GET', url, null);
   }
 
   /**
@@ -81,7 +81,7 @@ export class HttpService {
     header?: HttpHeaders,
     params?: HttpParams | { [param: string]: string | string[] }
   ): Observable<any> {
-    return this.request('POST', url, body, params, header);
+    return this.request('POST', url, body);
   }
 
   /**

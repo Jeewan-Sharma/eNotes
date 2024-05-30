@@ -1,27 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ASSETS } from '@core/consts';
-import { DeviceWidthService } from '@core/services';
+import { IUserDetails } from '@core/models';
+import { AuthService, DeviceWidthService } from '@core/services';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   readonly ASSETS = ASSETS
-
   checked: boolean = false;
-
   menuVisibility: boolean = false;
+  userDetails$: Observable<IUserDetails | null>;
 
-  loginCredential = {
-    loginStatus: false,
-    firstName: "Jeewan",
-    lastName: "Sharma",
-    email: "sjeewan53@gmail.com"
+  constructor(
+    protected _deviceWidthService: DeviceWidthService,
+    private _authService: AuthService,
+    private _router: Router,
+  ) {
+    this.userDetails$ = this._authService.userDetails$;
   }
 
-  constructor(protected _deviceWidthService: DeviceWidthService) { }
+  ngOnInit(): void {
+    console.log(this.userDetails$)
+    this.getUserInfo();
+  }
+
+  async getUserInfo() {
+    // this.userDetails = await this._authService.getUser();
+  }
 
   openSideBar() {
     this.menuVisibility = true;
@@ -34,6 +44,8 @@ export class HeaderComponent {
   routeToLogin() { }
 
   logout() {
-
+    document.cookie = 'eNotes-cookie=; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+    console.log('cookie reset');
+    this._router.navigate(['auth/login'])
   }
 }

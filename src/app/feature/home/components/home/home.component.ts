@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { INote } from '@core/models';
-import { DeviceWidthService } from '@core/services';
+import { AuthService, DeviceWidthService } from '@core/services';
 
 @Component({
   selector: 'app-home',
@@ -9,18 +9,17 @@ import { DeviceWidthService } from '@core/services';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-
-  text = '<p>jgfdjhgfkhg</p>'
-
   notes!: INote[];
   detailsDialogVisibility: boolean = false;
   addDialogVisibility: boolean = false;
   form!: FormGroup;
   selectedNote!: INote;
 
-  constructor(protected _deviceWidthService: DeviceWidthService) { }
+  constructor(
+    protected _deviceWidthService: DeviceWidthService,
+  ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.getNotes();
     this.initForm();
   }
@@ -97,7 +96,6 @@ export class HomeComponent implements OnInit {
 
   saveDetailsNote() {
     console.log(this.form.value)
-    console.log(this.text)
   }
 
   openDetails(selectedNote: INote) {

@@ -13,13 +13,19 @@ export class ApiService {
 
   login(credentials: ILoginCredentials): Promise<any> {
     return firstValueFrom(
-      this.http.post(API_URL.ENOTES.LOGIN(), credentials)
+      this.http.post(API_URL.ENOTES.LOGIN, credentials)
     );
   }
 
   register(credentials: IRegisterCredentials): Promise<any> {
     return firstValueFrom(
-      this.http.post(API_URL.ENOTES.REGISTER(), credentials)
+      this.http.post(API_URL.ENOTES.REGISTER, credentials)
     );
+  }
+
+  getUser(): Promise<any> {
+    return firstValueFrom(
+      this.http.get(API_URL.ENOTES.GET_USER)
+    )
   }
 }

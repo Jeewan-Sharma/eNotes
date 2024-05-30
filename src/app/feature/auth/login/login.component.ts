@@ -21,13 +21,13 @@ export class LoginComponent implements OnInit {
 
   formInvalidMessage: IMessage = {
     image: ASSETS.IMAGES.ERROR,
-    title: 'Form Invalid!',
+    title: 'Invalid Credentials!',
     description: 'Please check all the required fields of the form',
   };
 
   loginFailedMessage: IMessage = {
     image: ASSETS.IMAGES.ERROR,
-    title: 'Invalid Credentials!',
+    title: 'Login Failed!',
     description: 'Please check the credentials and try again.',
   };
 
