@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { INote } from '@core/models';
-import { AuthService, DeviceWidthService } from '@core/services';
+import { AuthService, DeviceWidthService, NotesService } from '@core/services';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     protected _deviceWidthService: DeviceWidthService,
+    private _noteService: NotesService,
   ) { }
 
   async ngOnInit() {
@@ -49,49 +50,8 @@ export class HomeComponent implements OnInit {
     this.tagsForm.removeAt(index);
   }
 
-  getNotes() {
-    this.notes = [
-      {
-        noteId: 1,
-        title: 'Title 1 is the best title among these all the title. So, It is called as a king of the titles.',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1', 'tag2', 'tag3'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
-      },
-      {
-        noteId: 2,
-        title: 'Title 2',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1', 'tag2'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
-      },
-      {
-        noteId: 3,
-        title: 'Title 3',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
-      },
-      {
-        noteId: 4,
-        title: 'Title 4',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1', 'tag2', 'tag3', 'tag4'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
-      },
-      {
-        noteId: 5,
-        title: 'Title 5',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1', 'tag2', 'tag3'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
-      }
-    ]
+  async getNotes() {
+    this.notes = await this._noteService.getNotes();
   }
 
   saveDetailsNote() {

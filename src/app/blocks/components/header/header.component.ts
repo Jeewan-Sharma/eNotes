@@ -14,18 +14,16 @@ export class HeaderComponent implements OnInit {
   readonly ASSETS = ASSETS
   checked: boolean = false;
   menuVisibility: boolean = false;
-  userDetails$: Observable<IUserDetails | null>;
+  userDetails: IUserDetails | null = this._authService.userDetails;
 
   constructor(
     protected _deviceWidthService: DeviceWidthService,
     private _authService: AuthService,
     private _router: Router,
   ) {
-    this.userDetails$ = this._authService.userDetails$;
   }
 
   ngOnInit(): void {
-    console.log(this.userDetails$)
     this.getUserInfo();
   }
 

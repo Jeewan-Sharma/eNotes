@@ -8,8 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private userDetails = new BehaviorSubject<IUserDetails | null>(null);
-  public userDetails$: Observable<IUserDetails | null> = this.userDetails.asObservable();
+  public userDetails: IUserDetails | null = null;
 
   constructor(
     private _apiService: ApiService,
@@ -50,7 +49,7 @@ export class AuthService {
       try {
         const res: IApiResponse = await this._apiService.getUser();
         if (res.status === EHttpResponseCode.GET_SUCCESS) {
-          this.userDetails.next(res?.body);
+          this.userDetails = res?.body;
           resolve(true);
         } else {
           resolve(false)
@@ -71,7 +70,7 @@ export class AuthService {
           throw new Error();
         }
       } catch (err) {
-        return reject(false);
+        throw new Error();
       }
     });
   }

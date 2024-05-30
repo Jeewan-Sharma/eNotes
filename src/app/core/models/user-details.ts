@@ -1,5 +1,5 @@
 export interface IUserDetails {
-  _Id: string;
+  _id: string;
   email: string;
   username: string;
 };

@@ -28,4 +28,10 @@ export class ApiService {
       this.http.get(API_URL.ENOTES.GET_USER)
     )
   }
+
+  getNotes(userID: string | null): Promise<any> {
+    return firstValueFrom(
+      this.http.get(API_URL.ENOTES.GET_NOTES + `/${userID}`)
+    )
+  }
 }

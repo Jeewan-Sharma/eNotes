@@ -17,7 +17,7 @@
       </div>
       <p-divider />
       <div class="flex align-items-center justify-content-between mt-2">
-        <p class="text-gray-500">Updated:{{note.modifiedDate}}</p>
+        <p class="text-gray-500">Updated: {{note.modifiedDate | date}}</p>
         <div class="flex gap-2">
           <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" size="small"></p-button>
           <p-button icon="pi pi-pencil" [rounded]="true" size="small"></p-button>
