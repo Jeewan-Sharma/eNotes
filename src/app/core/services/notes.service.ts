@@ -29,4 +29,64 @@ export class NotesService {
     });
   }
 
+  createNotes(newNote: any) {
+    return new Promise<INote>(async (resolve, reject) => {
+      try {
+        const res: IApiResponse = await this._apiService.createNotes(newNote);
+        if (res.status === EHttpResponseCode.GET_SUCCESS) {
+          return resolve(res?.body);
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        throw new Error();
+      }
+    })
+  }
+
+  deleteNote(noteId: string) {
+    return new Promise<INote>(async (resolve, reject) => {
+      try {
+        const res: IApiResponse = await this._apiService.deleteNote(noteId);
+        if (res.status === EHttpResponseCode.GET_SUCCESS) {
+          return resolve(res?.body);
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        throw new Error();
+      }
+    })
+  }
+
+  updateNote(noteId: string, updatedNote: any) {
+    return new Promise<INote>(async (resolve, reject) => {
+      try {
+        const res: IApiResponse = await this._apiService.updateNote(noteId, updatedNote);
+        if (res.status === EHttpResponseCode.GET_SUCCESS) {
+          return resolve(res?.body);
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        throw new Error();
+      }
+    })
+  }
+
+  setImportance(noteId: string, isImportant: boolean) {
+    return new Promise<INote>(async (resolve, reject) => {
+      try {
+        const res: IApiResponse = await this._apiService.setImportance(noteId, isImportant);
+        if (res.status === EHttpResponseCode.GET_SUCCESS) {
+          return resolve(res?.body);
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        throw new Error();
+      }
+    })
+  }
+
 }

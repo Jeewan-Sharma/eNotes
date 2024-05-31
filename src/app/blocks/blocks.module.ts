@@ -13,6 +13,8 @@ import { SidebarModule } from 'primeng/sidebar';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
+import { ToastModule } from 'primeng/toast'
+import { ToastComponent } from './components/toast/toast.component';
 
 const PrimeNgModules = [
   InputSwitchModule,
@@ -20,6 +22,7 @@ const PrimeNgModules = [
   OverlayPanelModule,
   ButtonModule,
   ProgressSpinnerModule,
+  ToastModule,
 ]
 
 @NgModule({
@@ -27,6 +30,7 @@ const PrimeNgModules = [
     AppLayoutComponent,
     HeaderComponent,
     LoaderComponent,
+    ToastComponent
   ],
   imports: [
     CommonModule,

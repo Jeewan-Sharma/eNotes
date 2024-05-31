@@ -109,7 +109,7 @@ export class HttpService {
    */
   delete(
     url: string,
-    body: any | null,
+    body?: any | null,
     header?: HttpHeaders,
     params?: HttpParams | { [param: string]: string | string[] }
   ): Observable<any> {
