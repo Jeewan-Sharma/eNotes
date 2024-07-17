@@ -58,4 +58,28 @@ export class ApiService {
       this.http.put(API_URL.ENOTES.SET_NOTES_IMPORTANCE + `/${noteId}`, { isImportant: isImportance })
     );
   }
+
+  getImportantNotes(userId: string) {
+    return firstValueFrom(
+      this.http.get(API_URL.ENOTES.GET_IMPORTANT_NOTES + `/${userId}`)
+    );
+  }
+
+  getNotesByTag(userId: string, tag: string) {
+    return firstValueFrom(
+      this.http.post(API_URL.ENOTES.GET_NOTES_BY_TAGS + `/${userId}`, { tag: tag })
+    );
+  }
+
+  searchNotes(userId: string, searchTerm: string) {
+    return firstValueFrom(
+      this.http.post(API_URL.ENOTES.SEARCH + `/${userId}`, { keyword: searchTerm })
+    );
+  }
+
+  getNotesTags(userId: string) {
+    return firstValueFrom(
+      this.http.get(API_URL.ENOTES.GET_NOTES_TAGS + `/${userId}`)
+    );
+  }
 }
