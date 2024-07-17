@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ASSETS } from '@core/consts';
+import { EPageState } from '@core/enums';
 import { INote } from '@core/models';
-import { DeviceWidthService } from '@core/services';
+import { DeviceWidthService, LoaderService, NotesService, ToastService } from '@core/services';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -9,18 +12,32 @@ import { DeviceWidthService } from '@core/services';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-
-  text = '<p>jgfdjhgfkhg</p>'
+  readonly ASSETS = ASSETS;
+  readonly ePageState = EPageState;
+  protected pageState$ = new BehaviorSubject<EPageState>(
+    this.ePageState.DEFAULT
+  );
 
   notes!: INote[];
+  private notesSubscription!: Subscription;
   detailsDialogVisibility: boolean = false;
   addDialogVisibility: boolean = false;
+  deleteDialogVisibility: boolean = false;
   form!: FormGroup;
+  searchForm!: FormGroup;
   selectedNote!: INote;
 
-  constructor(protected _deviceWidthService: DeviceWidthService) { }
+  constructor(
+    protected _deviceWidthService: DeviceWidthService,
+    private _noteService: NotesService,
+    private _loaderService: LoaderService,
+    private _toastService: ToastService,
+  ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.notesSubscription = this._noteService.onDisplayNotesSubject$.subscribe(
+      notes => this.notes = notes
+    );
     this.getNotes();
     this.initForm();
   }
@@ -29,7 +46,14 @@ export class HomeComponent implements OnInit {
     return this._deviceWidthService.screenSize$;
   }
 
+  get searchKey$() {
+    return this._noteService.searchKey$;
+  }
+
   initForm() {
+    this.searchForm = new FormGroup({
+      searchControl: new FormControl<string | null>(null, [Validators.required])
+    })
     this.form = new FormGroup({
       title: new FormControl<string | null>(null, [Validators.required]),
       description: new FormControl<string | null>(null, [Validators.required]),
@@ -50,54 +74,69 @@ export class HomeComponent implements OnInit {
     this.tagsForm.removeAt(index);
   }
 
-  getNotes() {
-    this.notes = [
-      {
-        noteId: 1,
-        title: 'Title 1 is the best title among these all the title. So, It is called as a king of the titles.',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1', 'tag2', 'tag3'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
-      },
-      {
-        noteId: 2,
-        title: 'Title 2',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1', 'tag2'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
-      },
-      {
-        noteId: 3,
-        title: 'Title 3',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
-      },
-      {
-        noteId: 4,
-        title: 'Title 4',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1', 'tag2', 'tag3', 'tag4'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
-      },
-      {
-        noteId: 5,
-        title: 'Title 5',
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        tags: ['tag1', 'tag2', 'tag3'],
-        isImportant: false,
-        modifiedDate: '07/05/2024',
+  async getNotes() {
+    try {
+      this.pageState$.next(this.ePageState.LOADING);
+      await this._noteService.getNotes();
+      this.pageState$.next(this.ePageState.SUCCESS);
+      if (this.notes.length === 0) {
+        this.pageState$.next(this.ePageState.EMPTY);
       }
-    ]
+    } catch (e) {
+      this.pageState$.next(this.ePageState.ERROR);
+      this._toastService.showSuccess({
+        message: `Oops! Something went wrong try again`,
+      });
+      throw e
+    }
   }
 
-  saveDetailsNote() {
-    console.log(this.form.value)
-    console.log(this.text)
+  async updateNote() {
+    try {
+      this._loaderService.showLoader();
+      if (this.form.invalid) {
+        this.form.markAllAsTouched()
+        console.log('invalid Form')
+        return
+      }
+      const newNoteState = {
+        title: this.form.controls['title'].value,
+        description: this.form.controls['description'].value,
+        tags: this.tagsForm.value
+      };
+      const res = await this._noteService.updateNote(this.selectedNote._id, newNoteState);
+      this._toastService.showSuccess({
+        message: `${res.title} updated Successfully`,
+      });
+      this._noteService.refreshNotesByRecentAction();
+      this.detailsDialogVisibility = false;
+    } catch (e) {
+      this._toastService.showSuccess({
+        message: `Oops! Something went wrong try again`,
+      });
+      throw e;
+    } finally {
+      this._loaderService.hideLoader();
+    }
+  }
+
+  async setImportance(isImportant: boolean) {
+    try {
+      this._loaderService.showLoader();
+      const res = await this._noteService.setImportance(this.selectedNote._id, isImportant);
+      this._toastService.showSuccess({
+        message: `Importance set successfully`,
+      });
+      this._noteService.refreshNotesByRecentAction();
+      this.selectedNote = res;
+    } catch (e) {
+      this._toastService.showSuccess({
+        message: `Oops! Something went wrong try again`,
+      });
+      throw e;
+    } finally {
+      this._loaderService.hideLoader();
+    }
   }
 
   openDetails(selectedNote: INote) {
@@ -124,14 +163,83 @@ export class HomeComponent implements OnInit {
     this.addDialogVisibility = false;
   }
 
-  addNewNote() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched()
-      console.log('invalid Form')
-      return
+  async addNewNote() {
+    try {
+      this._loaderService.showLoader();
+      if (this.form.invalid) {
+        this.form.markAllAsTouched()
+        console.log('invalid Form')
+        return
+      }
+      const newNoteState = {
+        title: this.form.controls['title'].value,
+        description: this.form.controls['description'].value,
+        tags: this.tagsForm.value
+      };
+      const res = await this._noteService.createNotes(newNoteState);
+      this._toastService.showSuccess({
+        message: `${res.title} Added Successfully`,
+      });
+      this._noteService.refreshNotesByRecentAction();
+      this.addDialogVisibility = false;
+    } catch (e) {
+      this._toastService.showSuccess({
+        message: `Oops! Something went wrong try again`,
+      });
+      throw e;
+    } finally {
+      this._loaderService.hideLoader();
     }
-    console.log(this.form.value)
   }
 
+  openDeleteDialog(selectedNote: INote) {
+    this.selectedNote = selectedNote;
+    this.deleteDialogVisibility = true;
+  }
 
+  closeDeleteDialog() {
+    this.deleteDialogVisibility = false;
+  }
+
+  async confirmDelete(noteId: string) {
+    try {
+      const res = await this._noteService.deleteNote(noteId);
+      this._toastService.showSuccess({
+        message: `${res.title} Deleted Successfully`,
+      });
+      this.closeDeleteDialog();
+      this._noteService.refreshNotesByRecentAction();
+    } catch (e) {
+      this._toastService.showSuccess({
+        message: `Oops! Something went wrong try again`,
+      });
+      throw e;
+    }
+  }
+
+  async onSearch() {
+    try {
+      if (this.searchForm.invalid) {
+        this.searchForm.markAllAsTouched();
+        return
+      }
+      this._noteService.setSearchKey(this.searchForm.controls['searchControl'].value)
+      this._loaderService.showLoader();
+      await this._noteService.searchNotes(this.searchForm.controls['searchControl'].value);
+    } catch (e) {
+      throw e
+    } finally {
+      this._loaderService.hideLoader();
+    }
+  }
+
+  cancelSearch() {
+    this._noteService.setSearchKey(null)
+    this.searchForm.reset();
+    this._noteService.refreshNotesByRecentAction();
+  }
+
+  ngOnDestroy(): void {
+    this.notesSubscription.unsubscribe();
+  }
 }

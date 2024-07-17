@@ -35,6 +35,7 @@ export class HttpService {
       headers: headers,
       observe: 'response',
       params: params,
+      withCredentials: true,
     };
     return this.http.request(method, url, options).pipe(
       catchError(this.handleError),
@@ -64,7 +65,7 @@ export class HttpService {
     header?: HttpHeaders,
     params?: HttpParams | { [param: string]: string | string[] }
   ): Observable<any> {
-    return this.request('GET', url, null, params, header);
+    return this.request('GET', url, null);
   }
 
   /**
@@ -80,7 +81,7 @@ export class HttpService {
     header?: HttpHeaders,
     params?: HttpParams | { [param: string]: string | string[] }
   ): Observable<any> {
-    return this.request('POST', url, body, params, header);
+    return this.request('POST', url, body);
   }
 
   /**
@@ -108,7 +109,7 @@ export class HttpService {
    */
   delete(
     url: string,
-    body: any | null,
+    body?: any | null,
     header?: HttpHeaders,
     params?: HttpParams | { [param: string]: string | string[] }
   ): Observable<any> {

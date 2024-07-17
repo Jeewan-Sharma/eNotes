@@ -15,6 +15,8 @@ import { DividerModule } from 'primeng/divider';
 import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
 import { SidebarModule } from 'primeng/sidebar';
+import { TooltipModule } from 'primeng/tooltip';
+import { SkeletonModule } from 'primeng/skeleton';
 
 const PrimeNgModules = [
   MenuModule,
@@ -25,6 +27,8 @@ const PrimeNgModules = [
   EditorModule,
   DialogModule,
   SidebarModule,
+  TooltipModule,
+  SkeletonModule
 ]
 
 @NgModule({

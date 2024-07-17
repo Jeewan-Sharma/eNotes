@@ -1,10 +1,12 @@
 <div class="p-3 surface-0 box-shadow border-round-3xl border-1 border-gray-200">
-  <div class="p-3 flex gap-2 cursor-pointer align-items-center hover:surface-200">
+  <div (click)="getAllNotes()" class="p-3 flex gap-2 cursor-pointer align-items-center"
+    [ngClass]="(selectedTab$ | async) === 'All notes'? 'surface-300' : 'hover:surface-200'">
     <i class="pi pi-book text-2xl text-600"></i>
     <p class="text-600">All notes</p>
-    <p-badge [value]="2"></p-badge>
+    <p-badge [value]="(this._notesService.noteSubject$ | async)?.length"></p-badge>
   </div>
-  <div class="p-3 flex gap-2 cursor-pointer align-items-center hover:surface-200">
+  <div (click)="getImportantNotes()" class="p-3 flex gap-2 cursor-pointer align-items-center "
+    [ngClass]="(selectedTab$ | async) === 'Important notes'? 'surface-300' : 'hover:surface-200'">
     <i class="pi pi-star-fill text-2xl text-600"></i>
     <p class="text-600">Important notes</p>
   </div>
@@ -12,11 +14,13 @@
   <div class="p-3">
     <p class="font-bold">Tags</p>
   </div>
-  <div *ngFor="let tag of tags" class="p-3 flex gap-2 cursor-pointer align-items-center hover:surface-200">
+  <div (click)="getNotesByTag(tag)" *ngFor="let tag of (tags$ | async)"
+    class="p-3 flex gap-2 cursor-pointer align-items-center"
+    [ngClass]="(selectedTab$ | async) === tag? 'surface-300' : 'hover:surface-200'">
     <i class="pi pi-hashtag text-600"></i>
     <p class="text-600">{{tag}}</p>
   </div>
-  <div *ngIf="tags.length === 0" class="p-3">
+  <div *ngIf="(tags$ | async)?.length === 0" class="p-3">
     <p class="text-500">Add Notes with tags</p>
   </div>
 </div>

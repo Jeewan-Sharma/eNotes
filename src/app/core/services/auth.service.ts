@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { EHttpResponseCode } from '@core/enums';
-import { ILoginCredentials, IRegisterCredentials } from '@core/models';
+import { ILoginCredentials, IRegisterCredentials, IApiResponse, IUserDetails } from '@core/models';
 import { ApiService } from '@core/services';
-
+import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  public userDetails: IUserDetails | null = null;
 
   constructor(
     private _apiService: ApiService,
@@ -15,8 +17,8 @@ export class AuthService {
   login(credentials: ILoginCredentials) {
     return new Promise<any>(async (resolve, reject) => {
       try {
-        const res = await this._apiService.login(credentials);
-        if (res.status === EHttpResponseCode.GET_SUCCESS) {
+        const res: IApiResponse = await this._apiService.login(credentials);
+        if (res.status === EHttpResponseCode.POST_SUCCESS) {
           return resolve(res?.body);
         } else {
           throw new Error();
@@ -30,8 +32,8 @@ export class AuthService {
   register(credentials: IRegisterCredentials) {
     return new Promise<any>(async (resolve, reject) => {
       try {
-        const res = await this._apiService.register(credentials);
-        if (res.status === EHttpResponseCode.GET_SUCCESS) {
+        const res: IApiResponse = await this._apiService.register(credentials);
+        if (res.status === EHttpResponseCode.POST_SUCCESS) {
           return resolve(res?.body);
         } else {
           throw new Error();
@@ -41,5 +43,37 @@ export class AuthService {
       }
     });
   }
+
+  isAuthenticated() {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const res: IApiResponse = await this._apiService.getUser();
+        if (res.status === EHttpResponseCode.GET_SUCCESS) {
+          this.userDetails = res?.body;
+          resolve(true);
+        } else {
+          resolve(false)
+        }
+      } catch (err) {
+        resolve(false)
+      }
+    });
+  }
+
+  getUser() {
+    return new Promise<IUserDetails>(async (resolve, reject) => {
+      try {
+        const res: IApiResponse = await this._apiService.getUser();
+        if (res.status === EHttpResponseCode.GET_SUCCESS) {
+          return resolve(res?.body);
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        throw new Error();
+      }
+    });
+  }
+
 
 }
