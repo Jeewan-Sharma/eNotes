@@ -41,9 +41,8 @@ export class HeaderComponent implements OnInit {
 
   routeToLogin() { }
 
-  logout() {
-    document.cookie = 'eNotes-cookie=; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
-    console.log('cookie reset');
+  async logout() {
+    const res = await this._authService.logout()
     this._router.navigate(['auth/login'])
   }
 }

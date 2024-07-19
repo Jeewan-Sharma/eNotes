@@ -82,7 +82,6 @@ export class LoginComponent implements OnInit {
         // } else {
         //   this._localHostDataService.setLoginStatusAndCredentials(rememberMe, null, null, null, null, null, true)
         // }
-        //
         this._router.navigate(['/'])
       }
     } catch (e) {

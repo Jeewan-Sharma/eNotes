@@ -3,6 +3,7 @@ const BASE_URL = 'https://enotes-server.onrender.com';
 
 const ENOTES = {
   LOGIN: `${BASE_URL}/auth/login`,
+  LOGOUT: `${BASE_URL}/auth/logout`,
   REGISTER: `${BASE_URL}/auth/register`,
   GET_USER: `${BASE_URL}/user`,
   GET_NOTES: `${BASE_URL}/notes`,

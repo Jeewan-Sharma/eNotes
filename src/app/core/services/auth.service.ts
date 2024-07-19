@@ -29,6 +29,21 @@ export class AuthService {
     });
   }
 
+  logout() {
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        const res: IApiResponse = await this._apiService.logout();
+        if (res.status === EHttpResponseCode.POST_SUCCESS) {
+          return resolve(res?.body);
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        return reject(false)
+      }
+    });
+  }
+
   register(credentials: IRegisterCredentials) {
     return new Promise<any>(async (resolve, reject) => {
       try {
