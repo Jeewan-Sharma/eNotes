@@ -17,6 +17,12 @@ export class ApiService {
     );
   }
 
+  logout(): Promise<any> {
+    return firstValueFrom(
+      this.http.post(API_URL.ENOTES.LOGOUT, '')
+    );
+  }
+
   register(credentials: IRegisterCredentials): Promise<any> {
     return firstValueFrom(
       this.http.post(API_URL.ENOTES.REGISTER, credentials)
