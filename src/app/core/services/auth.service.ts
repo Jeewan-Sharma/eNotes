@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EHttpResponseCode } from '@core/enums';
 import { ILoginCredentials, IRegisterCredentials, IApiResponse, IUserDetails } from '@core/models';
-import { ApiService } from '@core/services';
+import { ApiService, LoaderService } from '@core/services';
 import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,7 @@ export class AuthService {
 
   constructor(
     private _apiService: ApiService,
+    private _loaderService: LoaderService
   ) { }
 
   login(credentials: ILoginCredentials) {

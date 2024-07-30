@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { CoreModule } from './core/core.module';
 import { BlocksModule } from './blocks/blocks.module';
+import { LoaderComponent, ToastComponent } from '@shared/components';
 
-const Modules = [CoreModule, BlocksModule];
+const Modules = [CoreModule, BlocksModule, LoaderComponent, ToastComponent];
 
 
 @Component({

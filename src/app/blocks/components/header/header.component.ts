@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ASSETS } from '@core/consts';
 import { IUserDetails } from '@core/models';
-import { AuthService, DeviceWidthService } from '@core/services';
+import { AuthService, DeviceWidthService, LoaderService } from '@core/services';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     protected _deviceWidthService: DeviceWidthService,
     private _authService: AuthService,
+    private _loaderService: LoaderService,
     private _router: Router,
   ) {
   }
@@ -42,7 +43,9 @@ export class HeaderComponent implements OnInit {
   routeToLogin() { }
 
   async logout() {
-    const res = await this._authService.logout()
-    this._router.navigate(['auth/login'])
+    this._loaderService.showLoader();
+    await this._authService.logout();
+    this._router.navigate(['auth/login']);
+    this._loaderService.hideLoader();
   }
 }

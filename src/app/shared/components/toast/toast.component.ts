@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { DeviceWidthService } from '@core/services';
-import { ToastPositionType } from 'primeng/toast';
+import { ToastModule, ToastPositionType } from 'primeng/toast';
 import { Subscription, map } from 'rxjs';
 
 @Component({
   selector: 'app-toast',
   templateUrl: './toast.component.html',
-  styleUrl: './toast.component.scss'
+  styleUrl: './toast.component.scss',
+  standalone: true,
+  imports: [ToastModule]
 })
 export class ToastComponent {
   toastPosition!: ToastPositionType;
